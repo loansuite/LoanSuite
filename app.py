@@ -124,6 +124,9 @@ def google_verification():
     return send_from_directory(os.path.dirname(os.path.abspath(__file__)),
                                'google1fda9bbe18536e5d.html')
 
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('.', 'sitemap.xml')
 
 # --- Server Start ---
 
@@ -132,5 +135,6 @@ if __name__ == '__main__':
         init_db()
     
     app.run(debug=True)
+
 
 
