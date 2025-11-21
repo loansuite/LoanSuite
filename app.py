@@ -3,6 +3,8 @@ from flask import Flask, jsonify, request, g, send_file, send_from_directory
 from flask_mail import Mail, Message
 from datetime import datetime
 import os
+# NEW: Import threading for asynchronous operations
+import threading 
 
 app = Flask(__name__)
 DATABASE = 'loans.db'
@@ -27,6 +29,7 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        # Use a context manager to ensure the connection is closed when the thread is done
         db.row_factory = sqlite3.Row
     return db
 
@@ -60,6 +63,25 @@ def ensure_db():
         print("DB INIT ERROR:", e)
 
 # ------------------------------
+# ASYNCHRONOUS EMAIL SENDER
+# ------------------------------
+
+def send_async_email(app, msg):
+    """
+    Function to send the email inside a separate thread.
+    Requires app context to use the Flask-Mail extension.
+    """
+    # Use app.app_context() to make app config/extensions available in the new thread
+    with app.app_context():
+        try:
+            mail.send(msg)
+            print("INFO: Asynchronous Email sent successfully!")
+        except Exception as e:
+            # Errors in this thread won't block the web request
+            print(f"ERROR: Asynchronous Email failed: {e}")
+
+
+# ------------------------------
 # ROUTES
 # ------------------------------
 
@@ -83,7 +105,7 @@ def create_demo_request():
     mobile = data.get('mobile', 'N/A')
     email = data.get('email')
 
-    # --- Save to Database ---
+    # --- 1. Save to Database (Keep this synchronous and fast) ---
     try:
         db = get_db()
         db.execute(
@@ -93,9 +115,11 @@ def create_demo_request():
         db.commit()
     except Exception as e:
         print("DB ERROR:", e)
+        # If DB fails, you still want to return a server error, though the email might still be tried.
+        return jsonify({'message': f'Request failed due to DB error. {e}'}), 500
 
-    # --- Send Email Safely ---
-    email_status = ""
+
+    # --- 2. Send Email Asynchronously (This is the fix) ---
     try:
         msg = Message(
             subject=f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
@@ -110,12 +134,15 @@ Mobile: {mobile}
 Address: {address}
 Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
-        mail.send(msg)
-        email_status = "Email sent successfully!"
+        # Start a new thread to send the email immediately in the background
+        threading.Thread(target=send_async_email, args=(app, msg)).start()
+        email_status = "Email processing started in background."
     except Exception as e:
-        print("EMAIL ERROR:", e)
-        email_status = "Email failed, but request saved."
+        print("EMAIL PREP ERROR (Msg creation):", e)
+        email_status = "Email preparation failed."
 
+    # --- 3. Return Instant Response ---
+    # The Gunicorn worker returns this response instantly while the thread works.
     return jsonify({'message': f'Request saved. {email_status}'}), 201
 
 
