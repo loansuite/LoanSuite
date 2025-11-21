@@ -128,6 +128,13 @@ def google_verification():
 def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
+@app.before_request
+def ensure_db_exists():
+    try:
+        init_db()
+    except Exception as e:
+        print("DB INIT ERROR:", e)
+
 # --- Server Start ---
 
 if __name__ == '__main__':
@@ -135,6 +142,7 @@ if __name__ == '__main__':
         init_db()
     
     app.run(debug=True)
+
 
 
 
