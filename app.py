@@ -118,6 +118,11 @@ def create_demo_request():
         print(f"EMAIL SENDING FAILED: {e}")
         return jsonify({'message': 'Demo request accepted, but notification email failed to send (check server logs).'}), 201
 
+from flask import send_from_directory
+
+@app.route('/google1fda9bbe18536e5d.html')
+def google_verify():
+    return send_from_directory('.', 'google1fda9bbe18536e5d.html')
 
 # --- Server Start ---
 
@@ -126,3 +131,4 @@ if __name__ == '__main__':
         init_db()
     
     app.run(debug=True)
+
