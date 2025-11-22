@@ -2,3 +2,4 @@ Flask==3.0.3
 Flask-Mail==0.9.1
 gunicorn
 requests
+flask-cors
