@@ -4,13 +4,16 @@ from datetime import datetime
 import os
 import threading
 import requests
-from flask_cors import CORS   # <-- 🔥 Required for POST to work
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # <-- 🔥 This fixes the form submission
+
+# Enable full CORS for Render + custom domain
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 DATABASE = 'loans.db'
 
-# Load secret API key from Render Environment
+# Load Brevo API Key from Render Environment
 BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "").strip()
 
 RECEIVING_EMAILS = [
@@ -19,9 +22,18 @@ RECEIVING_EMAILS = [
 ]
 
 # ------------------------------
+# CORS RESPONSE FIX (IMPORTANT)
+# ------------------------------
+@app.after_request
+def add_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    return response
+
+# ------------------------------
 # DATABASE FUNCTIONS
 # ------------------------------
-
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -56,15 +68,12 @@ def ensure_db():
     except Exception as e:
         print("DB INIT ERROR:", e)
 
-
 # ------------------------------
 # SEND EMAIL USING BREVO API
 # ------------------------------
-
 def send_async_email(name, email, mobile, address):
-
     if not BREVO_API_KEY:
-        print("ERROR: BREVO_API_KEY missing in environment!")
+        print("ERROR: BREVO_API_KEY missing!")
         return
 
     url = "https://api.brevo.com/v3/smtp/email"
@@ -86,6 +95,7 @@ Address: {address}
 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
     }
+
     headers = {
         "accept": "application/json",
         "api-key": BREVO_API_KEY,
@@ -98,11 +108,9 @@ Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     except Exception as e:
         print("Email sending failed:", e)
 
-
 # ------------------------------
 # ROUTES
 # ------------------------------
-
 @app.route('/')
 def index():
     return send_file('index.html')
@@ -120,7 +128,7 @@ def create_demo_request():
     mobile = data.get("mobile", "N/A")
     email = data.get("email")
 
-    # Save to DB
+    # Save into DB
     try:
         db = get_db()
         db.execute(
@@ -134,12 +142,11 @@ def create_demo_request():
 
     # Send email in background
     threading.Thread(
-        target=send_async_email, 
+        target=send_async_email,
         args=(name, email, mobile, address)
     ).start()
 
     return jsonify({'message': 'Request saved & email sent!'}), 201
-
 
 # Google verification
 @app.route('/google1fda9bbe18536e5d.html')
@@ -147,22 +154,15 @@ def google_verify():
     return send_from_directory(os.path.dirname(os.path.abspath(__file__)),
                                'google1fda9bbe18536e5d.html')
 
-
 # Sitemap
 @app.route('/sitemap.xml')
 def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
-
+# ------------------------------
+# RUN SERVER
+# ------------------------------
 if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
-
-
-
-
-
-
-
-
