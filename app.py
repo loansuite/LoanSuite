@@ -5,6 +5,8 @@ from datetime import datetime
 import os
 # NEW: Import threading for asynchronous operations
 import threading 
+import requests
+import json
 
 app = Flask(__name__)
 DATABASE = 'loans.db'
@@ -67,19 +69,39 @@ def ensure_db():
 # ASYNCHRONOUS EMAIL SENDER
 # ------------------------------
 
-def send_async_email(app, msg):
-    """
-    Function to send the email inside a separate thread.
-    Requires app context to use the Flask-Mail extension.
-    """
-    # Use app.app_context() to make app config/extensions available in the new thread
-    with app.app_context():
-        try:
-            mail.send(msg)
-            print("INFO: Asynchronous Email sent successfully!")
-        except Exception as e:
-            # Errors in this thread won't block the web request
-            print(f"ERROR: Asynchronous Email failed: {e}")
+def send_async_email(name, email, mobile, address):
+    url = "https://api.brevo.com/v3/smtp/email"
+    payload = {
+        "sender": {
+            "name": "LoanSuite",
+            "email": "noreply@loansuite.com"
+        },
+        "to": [
+            {"email": RECEIVING_EMAIL}
+        ],
+        "subject": f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
+        "textContent": f"""
+A new demo request was submitted:
+
+Name: {name}
+Email: {email}
+Mobile: {mobile}
+Address: {address}
+Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+    }
+
+    headers = {
+        "accept": "application/json",
+        "api-key": "Yn938O1Q7JFacWbA",
+        "content-type": "application/json"
+    }
+
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        print("Email API Response:", response.text)
+    except Exception as e:
+        print("API Email Error:", e)
 
 
 # ------------------------------
@@ -136,7 +158,7 @@ Address: {address}
 Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         # Start a new thread to send the email immediately in the background
-        threading.Thread(target=send_async_email, args=(app, msg)).start()
+        threading.Thread(target=send_async_email, args=(name, email, mobile, address)).start()
         email_status = "Email processing started in background."
     except Exception as e:
         print("EMAIL PREP ERROR (Msg creation):", e)
@@ -167,6 +189,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
