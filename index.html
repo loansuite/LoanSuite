@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,8 +13,8 @@
 
     <style>
         :root {
-            --primary-color: #2563EB; /* Blue */
-            --secondary-color: #48BB78; /* Green */
+            --primary-color: #2563EB;
+            --secondary-color: #48BB78;
         }
         body { font-family: 'Arial', sans-serif; background-color: #f8f9fa; }
         .navbar-brand, .hero-title { font-weight: 700; }
@@ -22,49 +22,33 @@
         .feature-card:hover { transform: translateY(-5px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .cta-section { background: linear-gradient(90deg, #1e3a8a 0%, #2563EB 100%); color: white; padding: 60px 0; }
         .footer-section { background-color: #343a40; color: #adb5bd; padding: 40px 0; }
-        
-        /* Style for the carousel to maintain aspect ratio and centering */
         .carousel-item img {
-            max-height: 500px; /* Limit the maximum height */
+            max-height: 500px;
             width: auto;
             margin: auto;
             display: block;
             border-radius: 0.5rem;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            cursor: pointer; /* Indicate that the image is clickable */
+            cursor: pointer;
         }
-        
-        /* FIX: Move carousel controls outside the image area */
-        #loanSuiteCarousel {
-             position: relative;
-             overflow: visible; /* Allow controls to be positioned outside */
-        }
+        #loanSuiteCarousel { position: relative; overflow: visible; }
         .carousel-control-prev, .carousel-control-next {
-            width: 15%; /* Control width */
-            opacity: 1; /* Make sure controls are visible */
+            width: 15%;
+            opacity: 1;
         }
-        /* Position the Previous control (left arrow) */
-        .carousel-control-prev {
-            left: -10%; /* Move the button to the light blue background */
-        }
-        /* Position the Next control (right arrow) */
-        .carousel-control-next {
-            right: -10%; /* Move the button to the light blue background */
-        }
-        /* Style the actual arrow icon for better visibility outside the image */
+        .carousel-control-prev { left: -10%; }
+        .carousel-control-next { right: -10%; }
         .carousel-control-prev-icon, .carousel-control-next-icon {
             width: 2rem;
             height: 2rem;
-            background-color: var(--primary-color); /* Use your blue color for the button */
-            border-radius: 50%; /* Make them round */
+            background-color: var(--primary-color);
+            border-radius: 50%;
             padding: 5px;
         }
-
-        /* FIX: Ensure modal content fits fully on screen */
         .modal-body {
             max-width: 100%;
-            max-height: 90vh; /* Limit height to 90% of viewport height */
-            overflow: auto; /* Allow scrolling if image is too large */
+            max-height: 90vh;
+            overflow: auto;
         }
         #modalImage {
             max-width: 100%;
@@ -110,54 +94,34 @@
             <a href="#contact" class="btn btn-lg btn-outline-primary">Request a Demo</a>
             
             <div id="loanSuiteCarousel" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="4000">
-                
+
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="1" aria-current="true" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="2" aria-current="true" aria-label="Slide 3"></button>
-                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="3" aria-current="true" aria-label="Slide 4"></button>
-                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="4" aria-current="true" aria-label="Slide 5"></button>
+                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="2"></button>
+                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="3"></button>
+                    <button type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide-to="4"></button>
                 </div>
 
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="static/loansuite_login.png" class="d-block w-100" alt="LoanSuite Login Page" 
-                             data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImageInModal(this.src)"
-                             data-description="Secure Login and New User Creation">
+                        <img src="static/loansuite_login.png" class="d-block" data-description="Secure Login and New User Creation">
                     </div>
                     <div class="carousel-item">
-                        <img src="static/loansuite_gold_loan_dashboard.png" class="d-block w-100" alt="Gold Loan Dashboard"
-                             data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImageInModal(this.src)"
-                             data-description="Gold Loan Entry and Customer Overview">
+                        <img src="static/loansuite_gold_loan_dashboard.png" class="d-block" data-description="Gold Loan Entry and Customer Overview">
                     </div>
                     <div class="carousel-item">
-                        <img src="static/LoanSuite_BankLoan_AddTransaction.png" class="d-block w-100" alt="Bank Loan Transaction Form"
-                             data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImageInModal(this.src)"
-                             data-description="Manage Bank Loan Details and Collateral Entry">
+                        <img src="static/LoanSuite_BankLoan_AddTransaction.png" class="d-block" data-description="Manage Bank Loan Details and Collateral Entry">
                     </div>
                     <div class="carousel-item">
-                        <img src="static/LoanSuite_Inventory_GoldLoans.png" class="d-block w-100" alt="Gold Loan Inventory View"
-                             data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImageInModal(this.src)"
-                             data-description="Comprehensive Loan Inventory and Search">
+                        <img src="static/LoanSuite_Inventory_GoldLoans.png" class="d-block" data-description="Comprehensive Loan Inventory and Search">
                     </div>
                     <div class="carousel-item">
-                        <img src="static/loansuite_close_loan_dashboard.png" class="d-block w-100" alt="Loan Closure and Final Payment Calculation"
-                             data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImageInModal(this.src)"
-                             data-description="Automated Loan Closure and Payment Calculation">
+                        <img src="static/loansuite_close_loan_dashboard.png" class="d-block" data-description="Automated Loan Closure and Payment Calculation">
                     </div>
                 </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#loanSuiteCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
-            <p id="carousel-description" class="lead mt-3 text-secondary"></p> 
-
+            <p id="carousel-description" class="lead mt-3 text-secondary"></p>
         </div>
     </section>
 
@@ -168,27 +132,27 @@
                 
                 <div class="col">
                     <div class="card feature-card h-100 shadow-sm p-3">
-                        <div class="card-body h-100">
+                        <div class="card-body">
                             <h5 class="card-title text-primary">🏆 Gold, Silver & Bank Loans</h5>
-                            <p class="card-text">Manage "all your lending products" within a single, unified interface. Seamless inventory and finance tracking for every asset type. (See Gold/Bank Loan screens.)</p>
+                            <p class="card-text">Manage "all your lending products" within a single, unified interface. Seamless inventory and finance tracking for every asset type.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
                     <div class="card feature-card h-100 shadow-sm p-3">
-                        <div class="card-body h-100">
+                        <div class="card-body">
                             <h5 class="card-title text-primary">⚙️ Smart Interest Calculation</h5>
-                            <p class="card-text">Automated calculations incorporating "30-Day Grace Period" and the "Last Month Minus From Total Month" rule for Gold/Silver. Accrual tracking for annual Bank loans. (See Close Loan screen.)</p>
+                            <p class="card-text">Automated calculations incorporating "30-Day Grace Period" and the "Last Month Minus From Total Month" rule for Gold/Silver.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
                     <div class="card feature-card h-100 shadow-sm p-3">
-                        <div class="card-body h-100">
+                        <div class="card-body">
                             <h5 class="card-title text-primary">🗂️ Compliant PDF Generation</h5>
-                            <p class="card-text">Generate professional "Pawn Tickets" and "Redemption Receipts" instantly. Supports Split A4 and Letter formats configured in "Settings".</p>
+                            <p class="card-text">Generate professional "Pawn Tickets" and "Redemption Receipts" instantly.</p>
                         </div>
                     </div>
                 </div>
@@ -210,8 +174,8 @@
                             <h5 class="mb-0">Pawn Ticket (Open Loan)</h5>
                         </div>
                         <div class="card-body text-center p-2">
-                            <p class="card-text text-start small mb-2 text-muted">Document generated at the time of pledge, featuring customer details, pledged articles, loan principal, and all statutory "Pawnbrokers Act Rules".</p>
-                            <img src="static/LoanSuite_Pawn_Ticket.png" alt="Pawn Ticket Document Sample" class="img-fluid rounded border p-1" style="max-height: 500px;">
+                            <p class="text-start small text-muted">Document generated at the time of pledge, featuring customer details, pledged articles, loan principal, and all statutory "Pawnbrokers Act Rules".</p>
+                            <img src="static/LoanSuite_Pawn_Ticket.png" class="img-fluid rounded border p-1">
                         </div>
                     </div>
                 </div>
@@ -222,8 +186,8 @@
                             <h5 class="mb-0">Redemption Receipt (Close Loan)</h5>
                         </div>
                         <div class="card-body text-center p-2">
-                            <p class="card-text text-start small mb-2 text-muted">Receipt generated upon redemption, showing pledge date, redemption date, "Total Interest Due", and the final "TOTAL AMOUNT PAID" for clear settlement.</p>
-                            <img src="static/LoanSuite_Redemption_Receipt.png" alt="Redemption Receipt Document Sample" class="img-fluid rounded border p-1" style="max-height: 500px;">
+                            <p class="text-start small text-muted">Receipt generated upon redemption showing pledge date, redemption date, "Total Interest Due", and the final "TOTAL AMOUNT PAID".</p>
+                            <img src="static/LoanSuite_Redemption_Receipt.png" class="img-fluid rounded border p-1">
                         </div>
                     </div>
                 </div>
@@ -240,14 +204,14 @@
                     <h2 class="text-dark">Security and Control at Your Fingertips.</h2>
                     <p class="lead">Protect your business with robust data management and granular access controls, managed via the "User Management" screen.</p>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><span class="badge bg-secondary-color text-white me-2">🔐</span> "Role-Based Access:" Lock interest rates and restrict user privileges using the Admin-only "User Management" module. (See User Management screen.)</li>
-                        <li class="mb-2"><span class="badge bg-secondary-color text-white me-2">🏛️</span> "Rate & Bill Control:" Admins can set mandatory interest rates and bill formats from the "Settings" menu. (See Settings screen.)</li>
-                        <li class="mb-2"><span class="badge bg-secondary-color text-white me-2">💾</span> "Data Integrity:" One-click "Database Backup and Restore" functionality ensures zero data loss.</li>
-                        <li class="mb-2"><span class="badge bg-secondary-color text-white me-2">🖼️</span> "Image Proof:" Stores customer, ID (Aadhaar), and article photos directly linked to each loan record for enhanced security.</li>
+                        <li class="mb-2">🔐 "Role-Based Access:" Lock interest rates and restrict privileges.</li>
+                        <li class="mb-2">🏛️ "Rate & Bill Control:" Admins set rates and bill formats.</li>
+                        <li class="mb-2">💾 "Data Integrity:" One-click database backup/restore.</li>
+                        <li class="mb-2">🖼️ "Image Proof:" Stores customer, ID, and article photos.</li>
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <img src="static/LoanSuite_UserManagement_Admin.png" alt="LoanSuite User Management Screen" class="img-fluid rounded shadow">
+                    <img src="static/LoanSuite_UserManagement_Admin.png" class="img-fluid rounded shadow">
                 </div>
             </div>
         </div>
@@ -256,136 +220,75 @@
     <section id="contact" class="cta-section text-center">
         <div class="container">
             <h2>Ready to Streamline Your Lending Business?</h2>
-            <p class="lead">Book a free, non-obligation demo today and see LoanSuite in action.</p>
+            <p class="lead">Book a free demo today and see LoanSuite in action.</p>
+
             <form id="demoForm" class="mx-auto" style="max-width: 500px;">
-                <div class="mb-3">
-                    <input type="text" id="demoName" class="form-control form-control-lg" placeholder="Your Name" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" id="demoAddress" class="form-control form-control-lg" placeholder="Your Address or Location" required>
-                </div>
-                <div class="mb-3">
-                    <input type="tel" id="demoMobile" class="form-control form-control-lg" placeholder="Mobile Number" required>
-                </div>
+                <input type="text" id="demoName" class="form-control form-control-lg mb-3" placeholder="Your Name" required>
+                <input type="text" id="demoAddress" class="form-control form-control-lg mb-3" placeholder="Your Address or Location" required>
+                <input type="tel" id="demoMobile" class="form-control form-control-lg mb-3" placeholder="Mobile Number" required>
+                
                 <div class="input-group mb-3">
-                    <input type="email" id="demoEmail" class="form-control form-control-lg" placeholder="Enter your email address for demo" aria-label="Email address" required>
+                    <input type="email" id="demoEmail" class="form-control form-control-lg" placeholder="Enter your email" required>
                     <button class="btn btn-lg btn-warning" type="submit">Get Instant Access</button>
                 </div>
+
                 <div id="formMessage" class="mt-3"></div>
             </form>
-            </div>
+
+        </div>
     </section>
 
     <footer class="footer-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>LoanSuite</h5>
-                    <p>Simplified Loan Management. Built for trust, compliance, and growth.</p>
-                </div>
-                <div class="col-md-3">
-                    <h6>Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#features" class="text-decoration-none text-light">Features</a></li>
-                        <li><a href="#documents" class="text-decoration-none text-light">Documents</a></li> 
-                        <li><a href="#compliance" class="text-decoration-none text-light">Control</a></li>
-                        <li><a href="#contact" class="text-decoration-none text-light">Request Demo</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Contact</h6>
-                    <ul class="list-unstyled">
-                        <li>Email: maxcandy4517@gmail.com</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="text-center pt-3 border-top border-secondary mt-3">
-                © 2025 LoanSuite. All rights reserved.
-            </div>
+            <p class="text-center text-light mt-3">© 2025 LoanSuite. All rights reserved.</p>
         </div>
     </footer>
-    
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content bg-transparent border-0">
-          <div class="modal-body p-0">
-            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-            <img id="modalImage" src="" alt="Full-size software screenshot">
-          </div>
-        </div>
-      </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // FUNCTION TO HANDLE THE MODAL OPENING AND IMAGE SOURCE
-        function showImageInModal(src) {
-            const modalImage = document.getElementById('modalImage');
-            modalImage.src = src;
-        }
 
-        // Get the carousel and description element
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showImageInModal(src) { document.getElementById('modalImage').src = src; }
+
         const carouselElement = document.getElementById('loanSuiteCarousel');
         const descriptionElement = document.getElementById('carousel-description');
-        
-        // Function to update the description based on the active slide
+
         function updateCarouselDescription() {
             const activeItem = carouselElement.querySelector('.carousel-item.active');
-            if (activeItem) {
-                const activeImage = activeItem.querySelector('img');
-                const description = activeImage.getAttribute('data-description');
-                descriptionElement.textContent = description || ''; // Display the description or nothing
-            }
+            if (!activeItem) return;
+            const img = activeItem.querySelector('img');
+            descriptionElement.textContent = img.getAttribute('data-description') || "";
         }
-        
-        // 1. Initial load: Set the description for the first slide
-        document.addEventListener('DOMContentLoaded', updateCarouselDescription);
 
-        // 2. On slide change: Update the description
+        document.addEventListener('DOMContentLoaded', updateCarouselDescription);
         carouselElement.addEventListener('slid.bs.carousel', updateCarouselDescription);
 
-        // Existing form submission logic
         document.getElementById('demoForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Stop the default form submission
-            
-            const name = document.getElementById('demoName').value;
-            const address = document.getElementById('demoAddress').value; // COLLECTING ADDRESS
-            const mobile = document.getElementById('demoMobile').value;   // COLLECTING MOBILE
-            const email = document.getElementById('demoEmail').value;
-            const messageElement = document.getElementById('formMessage');
+            event.preventDefault();
 
-            // Data to send to the backend (4 fields)
             const formData = {
-                name: name,
-                address: address, // ADDED
-                mobile: mobile,   // ADDED
-                email: email
+                name: demoName.value,
+                address: demoAddress.value,
+                mobile: demoMobile.value,
+                email: demoEmail.value
             };
 
-            // Send data to the Flask backend
             fetch('https://loansuite.onrender.com/api/demo_requests', {
-
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             })
-            .then(response => response.json()) 
+            .then(r => r.json())
             .then(data => {
-                // Success message from backend
-                messageElement.textContent = `✅ ${data.message}`; 
-                messageElement.className = 'mt-3 text-success fw-bold';
-                document.getElementById('demoForm').reset();
+                formMessage.textContent = "✔ " + data.message;
+                formMessage.className = "mt-3 text-success fw-bold";
+                demoForm.reset();
             })
-            .catch(error => {
-                // Error feedback
-                console.error('Submission Error:', error);
-                messageElement.textContent = '❌ Submission failed. Please try again.';
-                messageElement.className = 'mt-3 text-danger fw-bold';
+            .catch(() => {
+                formMessage.textContent = "✘ Submission failed. Try again.";
+                formMessage.className = "mt-3 text-danger fw-bold";
             });
         });
     </script>
-    </body>
 
+</body>
 </html>
