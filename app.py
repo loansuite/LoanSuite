@@ -9,7 +9,7 @@ app = Flask(__name__)
 DATABASE = 'loans.db'
 
 # Load secret API key from Render Environment
-BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "").strip()
 
 RECEIVING_EMAILS = [
     "maxcandy4517@gmail.com",
@@ -84,8 +84,6 @@ Address: {address}
 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
     }
-    print("STATUS:", res.status_code)
-    print("RESPONSE:", res.text)
     headers = {
         "accept": "application/json",
         "api-key": BREVO_API_KEY,
@@ -158,6 +156,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
