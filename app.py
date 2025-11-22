@@ -4,8 +4,10 @@ from datetime import datetime
 import os
 import threading
 import requests
+from flask_cors import CORS   # <-- 🔥 Required for POST to work
 
 app = Flask(__name__)
+CORS(app)  # <-- 🔥 This fixes the form submission
 DATABASE = 'loans.db'
 
 # Load secret API key from Render Environment
@@ -156,6 +158,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
