@@ -11,9 +11,9 @@ DATABASE = 'loans.db'
 
 # --- EMAIL CONFIGURATION (BREVO SMTP) ---
 app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = '9c3ea3001@smtp-brevo.com'
 app.config['MAIL_PASSWORD'] = 'Yn938O1Q7JFacWbA'
 app.config['MAIL_DEFAULT_SENDER'] = '9c3ea3001@smtp-brevo.com'
@@ -167,6 +167,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
