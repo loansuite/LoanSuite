@@ -1,38 +1,29 @@
 import sqlite3
 from flask import Flask, jsonify, request, g, send_file, send_from_directory
-from flask_mail import Mail, Message
 from datetime import datetime
 import os
-# NEW: Import threading for asynchronous operations
-import threading 
+import threading
 import requests
-import json
 
 app = Flask(__name__)
 DATABASE = 'loans.db'
 
-# --- EMAIL CONFIGURATION (BREVO SMTP) ---
-app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = '9c3ea3001@smtp-brevo.com'
-app.config['MAIL_PASSWORD'] = 'Yn938O1Q7JFacWbA'
-app.config['MAIL_DEFAULT_SENDER'] = '9c3ea3001@smtp-brevo.com'
+# Load secret API key from Render Environment
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
 
-RECEIVING_EMAIL = 'maxcandy4517@gmail.com'
-mail = Mail(app)
+RECEIVING_EMAILS = [
+    "maxcandy4517@gmail.com",
+    "loansuite@gmail.com"
+]
 
 # ------------------------------
 # DATABASE FUNCTIONS
 # ------------------------------
 
 def get_db():
-    """Return SQLite DB connection"""
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
-        # Use a context manager to ensure the connection is closed when the thread is done
         db.row_factory = sqlite3.Row
     return db
 
@@ -43,7 +34,6 @@ def close_connection(exception):
         db.close()
 
 def init_db():
-    """Create table if missing"""
     db = get_db()
     db.execute("""
         CREATE TABLE IF NOT EXISTS demo_requests (
@@ -57,7 +47,6 @@ def init_db():
     """)
     db.commit()
 
-# Auto-create table before every request (Fix for Gunicorn/Render)
 @app.before_request
 def ensure_db():
     try:
@@ -65,23 +54,28 @@ def ensure_db():
     except Exception as e:
         print("DB INIT ERROR:", e)
 
+
 # ------------------------------
-# ASYNCHRONOUS EMAIL SENDER
+# SEND EMAIL USING BREVO API
 # ------------------------------
 
 def send_async_email(name, email, mobile, address):
+
+    if not BREVO_API_KEY:
+        print("ERROR: BREVO_API_KEY missing in environment!")
+        return
+
     url = "https://api.brevo.com/v3/smtp/email"
+
     payload = {
         "sender": {
-            "name": "LoanSuite",
+            "name": "LoanSuite Demo",
             "email": "noreply@loansuite.com"
         },
-        "to": [
-            {"email": RECEIVING_EMAIL}
-        ],
+        "to": [{"email": r} for r in RECEIVING_EMAILS],
         "subject": f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
         "textContent": f"""
-A new demo request was submitted:
+New demo request received:
 
 Name: {name}
 Email: {email}
@@ -93,15 +87,15 @@ Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
     headers = {
         "accept": "application/json",
-        "api-key": "Yn938O1Q7JFacWbA",
+        "api-key": BREVO_API_KEY,
         "content-type": "application/json"
     }
 
     try:
-        response = requests.post(url, json=payload, headers=headers)
-        print("Email API Response:", response.text)
+        res = requests.post(url, json=payload, headers=headers)
+        print("Brevo API Response:", res.text)
     except Exception as e:
-        print("API Email Error:", e)
+        print("Email sending failed:", e)
 
 
 # ------------------------------
@@ -110,10 +104,7 @@ Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 @app.route('/')
 def index():
-    try:
-        return send_file('index.html')
-    except Exception as e:
-        return f"Error loading site: {e}", 500
+    return send_file('index.html')
 
 
 @app.route('/api/demo_requests', methods=['POST'])
@@ -123,12 +114,12 @@ def create_demo_request():
     if not data or "name" not in data or "email" not in data:
         return jsonify({'error': 'Missing required fields'}), 400
 
-    name = data.get('name')
-    address = data.get('address', 'N/A')
-    mobile = data.get('mobile', 'N/A')
-    email = data.get('email')
+    name = data.get("name")
+    address = data.get("address", "N/A")
+    mobile = data.get("mobile", "N/A")
+    email = data.get("email")
 
-    # --- 1. Save to Database (Keep this synchronous and fast) ---
+    # Save to DB
     try:
         db = get_db()
         db.execute(
@@ -138,35 +129,15 @@ def create_demo_request():
         db.commit()
     except Exception as e:
         print("DB ERROR:", e)
-        # If DB fails, you still want to return a server error, though the email might still be tried.
-        return jsonify({'message': f'Request failed due to DB error. {e}'}), 500
+        return jsonify({'message': 'Database error'}), 500
 
+    # Send email in background
+    threading.Thread(
+        target=send_async_email, 
+        args=(name, email, mobile, address)
+    ).start()
 
-    # --- 2. Send Email Asynchronously (This is the fix) ---
-    try:
-        msg = Message(
-            subject=f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
-            recipients=[RECEIVING_EMAIL]
-        )
-        msg.body = f"""
-A new demo request was submitted:
-
-Name: {name}
-Email: {email}
-Mobile: {mobile}
-Address: {address}
-Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-"""
-        # Start a new thread to send the email immediately in the background
-        threading.Thread(target=send_async_email, args=(name, email, mobile, address)).start()
-        email_status = "Email processing started in background."
-    except Exception as e:
-        print("EMAIL PREP ERROR (Msg creation):", e)
-        email_status = "Email preparation failed."
-
-    # --- 3. Return Instant Response ---
-    # The Gunicorn worker returns this response instantly while the thread works.
-    return jsonify({'message': f'Request saved. {email_status}'}), 201
+    return jsonify({'message': 'Request saved & email sent!'}), 201
 
 
 # Google verification
@@ -182,18 +153,7 @@ def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
 
-# ------------------------------
-# LOCAL DEVELOPMENT ONLY
-# ------------------------------
 if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
-
-
-
-
-
-
-
-
