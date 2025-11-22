@@ -68,14 +68,13 @@ def send_async_email(name, email, mobile, address):
     url = "https://api.brevo.com/v3/smtp/email"
 
     payload = {
-        "sender": {
-            "name": "LoanSuite",
-            "email": "loansuite@gmail.com"
-        }
-
-        "to": [{"email": r} for r in RECEIVING_EMAILS],
-        "subject": f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
-        "textContent": f"""
+    "sender": {
+        "name": "LoanSuite",
+        "email": "loansuite@gmail.com"
+    },
+    "to": [{"email": r} for r in RECEIVING_EMAILS],
+    "subject": f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
+    "textContent": f"""
 New demo request received:
 
 Name: {name}
@@ -85,6 +84,9 @@ Address: {address}
 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
     }
+
+
+   
 
     headers = {
         "accept": "application/json",
@@ -158,4 +160,5 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
