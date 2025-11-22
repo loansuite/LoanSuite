@@ -69,9 +69,10 @@ def send_async_email(name, email, mobile, address):
 
     payload = {
         "sender": {
-            "name": "LoanSuite Demo",
-            "email": "noreply@loansuite.com"
-        },
+            "name": "LoanSuite",
+            "email": "loansuite@gmail.com"
+        }
+
         "to": [{"email": r} for r in RECEIVING_EMAILS],
         "subject": f"🚨 NEW LOANSUITE DEMO REQUEST from {name}",
         "textContent": f"""
@@ -157,3 +158,4 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
