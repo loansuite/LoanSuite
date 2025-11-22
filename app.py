@@ -83,7 +83,8 @@ Mobile: {mobile}
 Address: {address}
 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
-        }
+    }
+
     headers = {
         "accept": "application/json",
         "api-key": BREVO_API_KEY,
@@ -156,6 +157,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
