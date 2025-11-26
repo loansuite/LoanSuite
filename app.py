@@ -150,22 +150,30 @@ def create_demo_request():
 
     return jsonify({'message': 'Request saved & email sent!'}), 201
 
+# -----------------------------------------
+# GOOGLE VERIFICATION (KEEP IT ABOVE CATCH-ALL)
+# -----------------------------------------
 @app.route('/google1fda9bbe18536e5d.html')
 def google_verify_file():
-    return send_from_directory(app.root_path, 'google1fda9bbe18536e5d.html')
+    return app.response_class(
+        response="google-site-verification: google1fda9bbe18536e5d.html",
+        status=200,
+        mimetype='text/html'
+    )
+
+# -----------------------------------------
+# CATCH-ALL ROUTE (MUST BE LAST)
+# -----------------------------------------
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return jsonify({'error': f'The requested path /{path} was not found on this server.'}), 404
 
 @app.route('/sitemap-loansuite.xml')
 def sitemap():
     return send_from_directory(app.root_path, 'sitemap-loansuite.xml')
 
-# 4. Critical: The Catch-All 404 Handler (MUST BE THE LAST ROUTE)
-# This ensures any other non-existent URL returns a proper 404 status.
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
-    # This prevents Soft 404 errors for all other invalid paths.
-    return jsonify({'error': f'The requested path /{path} was not found on this server.'}), 404
-    
+
 # ------------------------------
 # RUN SERVER
 # ------------------------------
@@ -173,6 +181,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
