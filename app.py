@@ -154,11 +154,29 @@ def google_verify():
     return send_from_directory(os.path.dirname(os.path.abspath(__file__)),
                                'google1fda9bbe18536e5d.html')
 
-# Mismatched route and file path (Current State)
-@app.route('/sitemap.xml') 
-def sitemap():
-    return send_from_directory('.', 'sitemap-loansuite.xml') # Serves the NEW file at the OLD URL
+# TEMPORARY, DESTRUCTIVE CLEANUP ROUTE (DELETE THIS AFTER USE!)
+@app.route('/CLEANUP-SITEMAP-NOW')
+def delete_old_sitemap():
+    # Attempt to find and delete the lingering corrupted file artifact from the server
+    old_sitemap_path = os.path.join(app.root_path, 'sitemap.xml')
+    if os.path.exists(old_sitemap_path):
+        try:
+            os.remove(old_sitemap_path)
+            # File is deleted. We expect the next request to sitemap.xml to be a 404.
+            return "SUCCESS: Old sitemap.xml artifact deleted. **IMMEDIATELY REMOVE THIS ROUTE FROM app.py AND REDEPLOY!**", 200
+        except Exception as e:
+            # This often happens if permissions are restricted on the free tier
+            return f"ERROR: Failed to delete sitemap.xml. Check logs for permission error. Error: {e}", 500
+    else:
+        # File artifact is already gone.
+        return "INFO: Old sitemap.xml not found on server. Proceed to check sitemap URLs.", 200
 
+# Sitemap - This route ONLY handles the NEW, correct file path
+@app.route('/sitemap-loansuite.xml')
+def sitemap():
+    # This must serve the file named 'sitemap-loansuite.xml'
+    return send_from_directory('.', 'sitemap-loansuite.xml')
+    
 # ------------------------------
 # RUN SERVER
 # ------------------------------
@@ -166,5 +184,6 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
