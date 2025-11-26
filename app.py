@@ -150,9 +150,9 @@ def create_demo_request():
 
     return jsonify({'message': 'Request saved & email sent!'}), 201
 
-@app.route('/google1fda9be18536e5d.html')
+@app.route('/google1fda9bbe18536e5d.html')
 def google_verify_file():
-    return send_from_directory(app.root_path, 'google1fda9be18536e5d.html')
+    return send_from_directory(app.root_path, 'google1fda9bbe18536e5d.html')
 # 3. Sitemap Route (Already correct, but using app.root_path is safer)
 @app.route('/sitemap-loansuite.xml')
 def sitemap():
@@ -173,6 +173,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
