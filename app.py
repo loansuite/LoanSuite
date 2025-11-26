@@ -111,10 +111,12 @@ Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # ------------------------------
 # ROUTES
 # ------------------------------
+# 1. Main Index Route
+# Use send_from_directory for robustness in production (Render)
 @app.route('/')
 def index():
-    return send_file('index.html')
-
+    # The file is in the root path, so we use app.root_path or just '.'
+    return send_from_directory(app.root_path, 'index.html')
 
 @app.route('/api/demo_requests', methods=['POST'])
 def create_demo_request():
@@ -148,15 +150,24 @@ def create_demo_request():
 
     return jsonify({'message': 'Request saved & email sent!'}), 201
 
-# Somewhere near line 160 (New/Corrected)
-@app.route('/google1fda9bbe18536e5d.html')
-def google_verify():
-    return send_file('google1fda9bbe18536e5d.html')
-# Sitemap - This route ONLY handles the NEW, correct file path
+# 2. Google Site Verification Route (MUST MATCH THE FILENAME EXACTLY)
+@app.route('/google1fda9be1853de5d.html')
+def google_verify_file():
+    # This serves the file directly with a 200 OK status, resolving the Soft 404
+    return send_from_directory(app.root_path, 'google1fda9be1853de5d.html')
+
+# 3. Sitemap Route (Already correct, but using app.root_path is safer)
 @app.route('/sitemap-loansuite.xml')
 def sitemap():
-    # This must serve the file named 'sitemap-loansuite.xml'
-    return send_from_directory('.', 'sitemap-loansuite.xml')
+    return send_from_directory(app.root_path, 'sitemap-loansuite.xml')
+
+# 4. Critical: The Catch-All 404 Handler (MUST BE THE LAST ROUTE)
+# This ensures any other non-existent URL returns a proper 404 status.
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    # This prevents Soft 404 errors for all other invalid paths.
+    return jsonify({'error': f'The requested path /{path} was not found on this server.'}), 404
     
 # ------------------------------
 # RUN SERVER
@@ -165,6 +176,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
