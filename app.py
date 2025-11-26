@@ -154,7 +154,7 @@ def create_demo_request():
 @app.route('/google1fda9be1853de5d.html')
 def google_verify_file():
     # This serves the file directly with a 200 OK status, resolving the Soft 404
-    return send_from_directory(app.root_path, 'google1fda9be1853de5d.html')
+    return send_from_directory(app.root_path, 'google1fda9be18536e5d.html')
 
 # 3. Sitemap Route (Already correct, but using app.root_path is safer)
 @app.route('/sitemap-loansuite.xml')
@@ -176,6 +176,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
