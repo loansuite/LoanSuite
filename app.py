@@ -154,10 +154,10 @@ def google_verify():
     return send_from_directory(os.path.dirname(os.path.abspath(__file__)),
                                'google1fda9bbe18536e5d.html')
 
-# Sitemap
-@app.route('/sitemap.xml')
+# Mismatched route and file path (Current State)
+@app.route('/sitemap.xml') 
 def sitemap():
-    return send_from_directory('.', 'sitemap-loansuite.xml')
+    return send_from_directory('.', 'sitemap-loansuite.xml') # Serves the NEW file at the OLD URL
 
 # ------------------------------
 # RUN SERVER
@@ -166,4 +166,5 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
