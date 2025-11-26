@@ -148,18 +148,10 @@ def create_demo_request():
 
     return jsonify({'message': 'Request saved & email sent!'}), 201
 
-# Google verification
+# Somewhere near line 160 (New/Corrected)
 @app.route('/google1fda9bbe18536e5d.html')
 def google_verify():
-    # This simplified command tells Flask to look for the file directly in the app's root folder.
     return send_file('google1fda9bbe18536e5d.html')
-# TEMPORARY, DESTRUCTIVE CLEANUP ROUTE (DELETE THIS AFTER USE!)
-
-@app.route('/google1fda9bbe18536e5d.html')
-def google_verify():
-    # This simplified command tells Flask to look for the file directly in the app's root folder.
-    return send_file('google1fda9bbe18536e5d.html')
-    
 # Sitemap - This route ONLY handles the NEW, correct file path
 @app.route('/sitemap-loansuite.xml')
 def sitemap():
@@ -173,6 +165,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
