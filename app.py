@@ -151,10 +151,10 @@ def create_demo_request():
 # Google verification
 @app.route('/google1fda9bbe18536e5d.html')
 def google_verify():
-    return send_from_directory(os.path.dirname(os.path.abspath(__file__)),
-                               'google1fda9bbe18536e5d.html')
-
+    # This simplified command tells Flask to look for the file directly in the app's root folder.
+    return send_file('google1fda9bbe18536e5d.html')
 # TEMPORARY, DESTRUCTIVE CLEANUP ROUTE (DELETE THIS AFTER USE!)
+
 @app.route('/CLEANUP-SITEMAP-NOW')
 def delete_old_sitemap():
     # Attempt to find and delete the lingering corrupted file artifact from the server
@@ -184,6 +184,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
