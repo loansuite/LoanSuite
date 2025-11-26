@@ -157,7 +157,7 @@ def google_verify():
 # Sitemap
 @app.route('/sitemap.xml')
 def sitemap():
-    return send_from_directory('.', 'sitemap.xml')
+    return send_from_directory('.', 'sitemap-loansuite.xml')
 
 # ------------------------------
 # RUN SERVER
@@ -166,3 +166,4 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
