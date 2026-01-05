@@ -173,6 +173,13 @@ def catch_all(path):
 def sitemap():
     return send_from_directory(app.root_path, 'sitemap-loansuite.xml')
 
+@app.route('/download-loansuite')
+def download_loansuite():
+    return jsonify({
+        "url": "https://github.com/loansuite/LoanSuite/releases/download/v3.5/LoanSuite_Setup_v3.5.exe"
+    })
+
+
 
 # ------------------------------
 # RUN SERVER
@@ -181,6 +188,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
