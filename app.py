@@ -150,6 +150,14 @@ def create_demo_request():
 
     return jsonify({'message': 'Request saved & email sent!'}), 201
 
+
+@app.route('/download-loansuite')
+def download_loansuite():
+    return jsonify({
+        "url": "https://github.com/loansuite/LoanSuite/releases/download/v3.5/LoanSuite_Setup_v3.5.exe"
+    })
+
+
 # -----------------------------------------
 # GOOGLE VERIFICATION (KEEP IT ABOVE CATCH-ALL)
 # -----------------------------------------
@@ -188,6 +196,7 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
 
 
 
