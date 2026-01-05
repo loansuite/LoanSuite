@@ -419,21 +419,23 @@
                 return response.json();
             }) 
             .then(data => {
-    const messageElement = document.getElementById('formMessage');
+const messageElement = document.getElementById('formMessage');
 
-    messageElement.innerHTML = `
-        <div class="alert alert-success fw-bold">
-            ✅ ${data.message || 'Demo request submitted successfully!'}
-        </div>
+messageElement.innerHTML = `
+<div class="alert alert-success fw-bold">
+✅ ${data.message || 'Demo request submitted successfully!'}
+</div>
 
-        <a href="https://github.com/loansuite/LoanSuite/releases/download/v3.5/LoanSuite_Setup_v3.5.exe"
-           class="btn btn-lg btn-warning mt-2">
-            ⬇️ Download LoanSuite Setup
-        </a>
-    `;
+<a href="https://drive.google.com/uc?export=download&id=1GtmeYr59YHbPxtuv5Q0_nankwP91-keC"
+class="btn btn-lg btn-warning mt-2"
+target="_blank">
+⬇️ Download LoanSuite (Windows Setup)
+</a>
+`;
 
-    document.getElementById('demoForm').reset();
+document.getElementById('demoForm').reset();
 })
+
 
             .catch(error => {
                 // Error feedback (This will catch network errors or bad response status)
@@ -446,4 +448,5 @@
     </body>
 
 </html>
+
 
