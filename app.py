@@ -61,16 +61,22 @@ def init_db():
     """)
     db.commit()
 
-@app.before_request
-def ensure_db():
-    try:
-        init_db()
-    except Exception as e:
-        print("DB INIT ERROR:", e)
+#@app.before_request
+#def ensure_db():
+#    try:
+#        init_db()
+#    except Exception as e:
+#        print("DB INIT ERROR:", e)
+
+
 
 # ------------------------------
 # SEND EMAIL USING BREVO API
 # ------------------------------
+
+with app.app_context():
+    init_db()
+
 def send_async_email(name, email, mobile, address):
     if not BREVO_API_KEY:
         print("ERROR: BREVO_API_KEY missing!")
@@ -113,10 +119,18 @@ Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # ------------------------------
 # 1. Main Index Route
 # Use send_from_directory for robustness in production (Render)
+#@app.route('/')
+#def index():
+#    # The file is in the root path, so we use app.root_path or just '.'
+#    return send_from_directory(app.root_path, 'index.html')
+
 @app.route('/')
 def index():
-    # The file is in the root path, so we use app.root_path or just '.'
-    return send_from_directory(app.root_path, 'index.html')
+    try:
+        return send_from_directory(app.root_path, 'index.html')
+    except Exception as e:
+        return "Site under maintenance", 200
+
 
 @app.route('/api/demo_requests', methods=['POST'])
 def create_demo_request():
@@ -171,23 +185,40 @@ def google_verify_file():
 # -----------------------------------------
 # CATCH-ALL ROUTE (MUST BE LAST)
 # -----------------------------------------
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
-    return jsonify({'error': f'The requested path /{path} was not found on this server.'}), 404
+#@app.route('/', defaults={'path': ''})
+#@app.route('/<path:path>')
+#def catch_all(path):
+ #   return jsonify({'error': f'The requested path /{path} was not found on this server.'}), 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return jsonify({'error': 'Page not found'}), 404
 
-@app.route('/sitemap-loansuite.xml')
+#@app.route('/sitemap-loansuite.xml')
+#def sitemap():
+#    return send_from_directory(app.root_path, 'sitemap-loansuite.xml')
+
+@app.route('/sitemap.xml')
 def sitemap():
     return send_from_directory(app.root_path, 'sitemap-loansuite.xml')
 
+@app.route("/health")
+def health():
+    return "OK", 200
 
 # ------------------------------
 # RUN SERVER
 # ------------------------------
-if __name__ == '__main__':
+#if __name__ == '__main__':
+ #   with app.app_context():
+ #       init_db()
+ # app.run(debug=True)
+
+if __name__ == "__main__":
     with app.app_context():
         init_db()
-    app.run(debug=True)
+
+    app.run(host="0.0.0.0", port=5000)
+
 
 
 
