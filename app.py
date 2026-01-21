@@ -199,7 +199,12 @@ def page_not_found(e):
 
 @app.route('/sitemap.xml')
 def sitemap():
-    return send_from_directory(app.root_path, 'sitemap-loansuite.xml')
+    return send_from_directory(
+        app.root_path,
+        'sitemap-loansuite.xml',
+        mimetype='application/xml'
+    )
+
 
 @app.route("/health")
 def health():
@@ -218,6 +223,7 @@ if __name__ == "__main__":
         init_db()
 
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
